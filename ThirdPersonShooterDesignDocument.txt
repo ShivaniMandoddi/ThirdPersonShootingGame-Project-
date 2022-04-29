@@ -1,0 +1,49 @@
+Third Person Shooter Game:
+ Player shoots the enemy using bullets.Enemy chase the player and attacks the player.
+
+FlowChart:
+
+Creating a Terrain(Water,Forest Landscape)
+Baking Terrain
+Creating a Player
+Adding Animator Controller to Player including Blendtree
+Player Movement 
+Player Animations logic
+Creating a Enemy
+Adding Animator Controller to Enemy
+Enemy State Design
+Spawing the Enemies, when player triggers at particular location
+Creating a pool for player bullets
+Instantiatng the bullets
+Ragdoll Effects for player and enemy
+Health and Ammo
+Adding Sounds(Using namespace to add animationevents)
+Particle Effects for bullet collision
+Making UI
+
+Win Condition:
+When player kill all the enemies
+
+Loose Condition:
+When player health falls to zero
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
