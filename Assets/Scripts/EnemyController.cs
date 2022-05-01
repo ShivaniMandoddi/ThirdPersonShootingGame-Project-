@@ -46,6 +46,15 @@ public class EnemyController : MonoBehaviour
         
 
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag=="Bullet")
+        {
+            Debug.Log("Collisionhappening");
+            Destroy(collision.gameObject);
+            currentState= new Dead(this.gameObject, agent, animator, player);
+        }
+    }
 }
 public class State
 {
@@ -74,7 +83,7 @@ public class State
         this.animator = _animator;
         eventStage = EVENTS.ENTER;
     }
-    public virtual void Enter()
+    public virtual void Enter()             
     {
         eventStage = EVENTS.UPDATE;
     }
@@ -103,14 +112,14 @@ public class State
         }
         return this;
     }
-    public bool CanSeePlayer()
+    public bool CanSeePlayer()        //Checking Distanse between player and enemy
     {
         if (Vector3.Distance(nPC.transform.position, playerPosition.position) < 15f)
             return true;
         return false;
     }
 }
-public class Idle : State
+public class Idle : State               //Idle State
 {
     public Idle(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
@@ -125,12 +134,12 @@ public class Idle : State
     }
     public override void Update()
     {
-        if (CanSeePlayer())
+        if (CanSeePlayer())                   //If enemy can see player, enemy goes to chase state
         {
             nextState = new Chase(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
         }
-        else
+        else                        // Otherwise, goes to Wonder State
         {
             nextState = new Wonder(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -160,12 +169,12 @@ public class Wonder : State
     }
     public override void Update()
     {
-        float randValueX = nPC.transform.position.x + Random.Range(-8f, 8f);
+        float randValueX = nPC.transform.position.x + Random.Range(-8f, 8f);           // Taking random x and z position values
         float randValueZ = nPC.transform.position.z + Random.Range(-8f, 8f);
-        float ValueY = Terrain.activeTerrain.SampleHeight(new Vector3(randValueX, 0f, randValueZ));
+        float ValueY = Terrain.activeTerrain.SampleHeight(new Vector3(randValueX, 0f, randValueZ));  //Setting y position related to terrain height
         Vector3 destination = new Vector3(randValueX, ValueY, randValueZ);
-        agent.SetDestination(destination);
-        if (CanSeePlayer())
+        agent.SetDestination(destination);              // Transforming enemy position into ranodm position
+        if (CanSeePlayer())           // If  enemy can see player, then enemy goes to chase state 
         {
             nextState = new Chase(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -194,10 +203,10 @@ public class Chase : State
     }
     public override void Update()
     {
-        agent.SetDestination(playerPosition.position);
-        nPC.transform.LookAt(playerPosition.position);
+        agent.SetDestination(playerPosition.position);    // Enemy set to follow player
+        nPC.transform.LookAt(playerPosition.position); // Enemy looking at player 
 
-        if (!CanSeePlayer())
+        if (!CanSeePlayer())       // If enemy can't see player, enemy goes to wondering state
         {
             nextState = new Wonder(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -233,7 +242,8 @@ public class Attack : State
     }
     public override void Update()
     {
-        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance + 1f)
+
+        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance+0.3f)  // If enemy is far than stopping distance, again to idle state 
         {
             nextState = new Idle(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -248,3 +258,29 @@ public class Attack : State
 
 
 }
+public class Dead : State// Dead State
+{
+    public Dead(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
+    {
+        stateName = STATE.DEATH;
+        nPC.transform.LookAt(playerPosition.position);
+    }
+    public override void Enter()
+    {
+        animator.SetBool("IsDead", true);
+        base.Enter();
+
+    }
+    public override void Update()
+    {
+
+        
+    }
+    public override void Exit()
+    {
+        animator.SetBool("IsDead", false);
+        base.Exit();
+    }
+
+}
+
