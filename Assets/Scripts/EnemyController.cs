@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     public Transform player;
     public State currentState;
     public GameObject bloodEffect;
+    public GameObject enemyRagdoll;
     private void Awake()
     {
         if (instance == null)
@@ -50,9 +51,17 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.gameObject.tag=="Bullet")
         {
-            Debug.Log("Collisionhappening");
-            Destroy(collision.gameObject);
-            currentState= new Dead(this.gameObject, agent, animator, player);
+
+            collision.gameObject.SetActive(false);
+            if (Random.Range(0, 5) < 3)
+            {
+                Instantiate(enemyRagdoll, this.transform.position, Quaternion.identity);
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                currentState = new Dead(this.gameObject, agent, animator, player);
+            } 
         }
     }
 }

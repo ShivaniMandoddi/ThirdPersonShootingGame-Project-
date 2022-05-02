@@ -34,8 +34,14 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))     // PLayer Attacking
         {
             animator.SetTrigger("IsAttack");
-            GameObject temp=Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
-            temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1000f);
+            //GameObject temp=Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
+            GameObject temp = SpawnManager.instance.GetFromPool("Bullet");
+            if (temp != null)
+            {
+                temp.SetActive(true);
+                temp.transform.position = bulletPosition.position;
+                temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1000f);
+            }
 
         }
 

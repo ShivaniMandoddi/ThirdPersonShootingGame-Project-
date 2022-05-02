@@ -7,7 +7,9 @@ namespace MyObjectPool
     [System.Serializable]
     public class ObjectPools
     {
-        public GameObject item;
+        public GameObject prefab;
         public int count;
+        
     }
+    
 }

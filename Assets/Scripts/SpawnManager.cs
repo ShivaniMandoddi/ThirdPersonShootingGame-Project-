@@ -16,17 +16,36 @@ public class SpawnManager : MonoBehaviour
     public List<ObjectPools> poolItems = new List<ObjectPools>();
     void Start()
     {
-        
+        AddToPool();  
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+         
     }
-}
-public class ObjectPool
-{
-    public GameObject item;
-    public int count;
+    public  void AddToPool()
+    {
+        foreach (var item in poolItems)
+        {
+            for (int i = 0; i < item.count; i++)
+            {
+                GameObject temp=Instantiate(item.prefab);
+                
+                pool.Add(temp);
+                temp.SetActive(false);
+            }
+        }
+    }
+    public GameObject GetFromPool(string tagName)
+    {
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if(pool[i].tag==tagName && !pool[i].activeInHierarchy)
+            {
+                return (pool[i]);
+            }
+        }
+        return null;
+    }
 }
