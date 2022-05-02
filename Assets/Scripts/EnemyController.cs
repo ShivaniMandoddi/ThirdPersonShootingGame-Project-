@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
+using MyObjectPool;
 
 public class EnemyController : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class EnemyController : MonoBehaviour
     public State currentState;
     public GameObject bloodEffect;
     public GameObject enemyRagdoll;
+    
+    Player players = new Player();
     private void Awake()
     {
         if (instance == null)
@@ -26,12 +30,14 @@ public class EnemyController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        players.health = players.maxhealth;
+       
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
         agent.enabled = true;
-
+        player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
         currentState = new Idle(this.gameObject, agent, animator, player);
     }
 
@@ -46,6 +52,12 @@ public class EnemyController : MonoBehaviour
 
         
 
+    }
+    public void playerHealth()
+    {
+        players.health = Mathf.Clamp(players.health - 1, 0, players.maxhealth);
+        player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
+        Debug.Log("Player health: " + players.health);
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -201,7 +213,7 @@ public class Chase : State
     public Chase(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
         stateName = STATE.CHASE;
-        agent.stoppingDistance = 5f;
+        agent.stoppingDistance = 3f;
 
     }
     public override void Enter()
@@ -269,10 +281,11 @@ public class Attack : State
 }
 public class Dead : State// Dead State
 {
+    float time;
     public Dead(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
         stateName = STATE.DEATH;
-        nPC.transform.LookAt(playerPosition.position);
+        
     }
     public override void Enter()
     {
@@ -282,7 +295,13 @@ public class Dead : State// Dead State
     }
     public override void Update()
     {
-
+        time = time + Time.deltaTime;
+        if(time>4f)
+        {
+            nPC.SetActive(false);
+            time = 0f;
+            eventStage = EVENTS.EXIT;
+        }
         
     }
     public override void Exit()

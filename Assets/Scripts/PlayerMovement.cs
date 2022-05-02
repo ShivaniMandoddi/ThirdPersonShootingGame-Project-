@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using MyObjectPool;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,17 +13,21 @@ public class PlayerMovement : MonoBehaviour
     AudioSource audioSource;
     public AudioClip shootClip;
     public AudioClip walkClip;
-    public GameObject bulletPrefab;
     public Transform bulletPosition;
+    Player player = new Player();
+    public Text healthText;
     void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        player.health = player.maxhealth;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         Vector3 movement =new Vector3(Input.GetAxis("Horizontal"),0f, Input.GetAxis("Vertical")); // Taking inputs
        
         transform.Translate(movement.x*Time.deltaTime* playerSpeed, 0f, movement.z*Time.deltaTime * playerSpeed); // PLayer moving
@@ -40,11 +46,17 @@ public class PlayerMovement : MonoBehaviour
             {
                 temp.SetActive(true);
                 temp.transform.position = bulletPosition.position;
-                temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1000f);
+                temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1500f);
             }
 
         }
+       
+        
 
+    }
+    public void PlayerHealth(int health)
+    {
+        healthText.text = "Health: " + health;
     }
     public void ShotFire()       //Animation Event function for Firing
     {
@@ -55,6 +67,10 @@ public class PlayerMovement : MonoBehaviour
     {
         audioSource.clip = walkClip;
         audioSource.Play();
+    }
+    public void PlayerDead()
+    {
+
     }
 
 }

@@ -11,5 +11,14 @@ namespace MyObjectPool
         public int count;
         
     }
+    public class Player
+    {
+        public int health;
+        public int maxhealth=50;
+        public int ammo;
+       
+        
+        
+    }
     
 }
