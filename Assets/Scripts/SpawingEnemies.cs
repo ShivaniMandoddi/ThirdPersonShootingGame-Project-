@@ -48,7 +48,7 @@ public class SpawingEnemies : MonoBehaviour
         if(other.gameObject.tag=="SpawnPoint")
         {
             Debug.Log("Trigger entered");
-            SpawnEnemy(other.gameObject.transform);
+            SpawnEnemy(gameObject.transform);
         }
     }
 }

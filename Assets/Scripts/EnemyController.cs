@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
     public GameObject bloodEffect;
     public GameObject enemyRagdoll;
     
-    Player players = new Player();
+   // Player players = new Player();
     private void Awake()
     {
         if (instance == null)
@@ -30,13 +30,13 @@ public class EnemyController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        players.health = players.maxhealth;
+        //players.health = players.maxhealth;
         
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
-        player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
+        
         agent.enabled = true;
         currentState = new Idle(this.gameObject, agent, animator, player);
     }
@@ -55,9 +55,10 @@ public class EnemyController : MonoBehaviour
     }
     public void playerHealth()
     {
-        players.health = Mathf.Clamp(players.health - 1, 0, players.maxhealth);
-        player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
-        Debug.Log("Player health: " + players.health);
+        player.GetComponent<PlayerMovement>().PlayerHealth(1);
+        //players.health = Mathf.Clamp(players.health - 1, 0, players.maxhealth);
+        //player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
+        //Debug.Log("Player health: " + players.health);
     }
     private void OnCollisionEnter(Collision collision)
     {
