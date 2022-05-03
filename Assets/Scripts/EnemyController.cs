@@ -31,13 +31,13 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         players.health = players.maxhealth;
-       
+        
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
-        agent.enabled = true;
         player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
+        agent.enabled = true;
         currentState = new Idle(this.gameObject, agent, animator, player);
     }
 
@@ -65,13 +65,16 @@ public class EnemyController : MonoBehaviour
         {
 
             collision.gameObject.SetActive(false);
-            if (Random.Range(0, 5) < 3)
-            {
-                Instantiate(enemyRagdoll, this.transform.position, Quaternion.identity);
-                gameObject.SetActive(false);
+             if (Random.Range(0, 5) < 3)
+             {
+                 Instantiate(enemyRagdoll, this.transform.position, Quaternion.identity);
+                 animator.SetBool("IsAttacking", false);
+                 
+                currentState = new Dead1(this.gameObject, agent, animator, player);
             }
-            else
-            {
+             else
+             {
+                animator.SetBool("IsAttacking", false);
                 currentState = new Dead(this.gameObject, agent, animator, player);
             } 
         }
@@ -213,7 +216,7 @@ public class Chase : State
     public Chase(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
         stateName = STATE.CHASE;
-        agent.stoppingDistance = 3f;
+        agent.stoppingDistance = 4f;
 
     }
     public override void Enter()
@@ -298,15 +301,44 @@ public class Dead : State// Dead State
         time = time + Time.deltaTime;
         if(time>4f)
         {
-            nPC.SetActive(false);
+            
             time = 0f;
+            nextState = new Idle(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
+            
         }
         
     }
     public override void Exit()
     {
         animator.SetBool("IsDead", false);
+        nPC.SetActive(false);
+        base.Exit();
+    }
+
+}
+public class Dead1 : State// Dead State
+{
+    float time;
+    public Dead1(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
+    {
+        stateName = STATE.DEATH;
+
+    }
+    public override void Enter()
+    {
+
+        nextState = new Idle(nPC, agent, animator, playerPosition);
+        eventStage = EVENTS.EXIT;
+    }
+    public override void Update()
+    {
+        
+
+    }
+    public override void Exit()
+    {
+        nPC.SetActive(false);
         base.Exit();
     }
 

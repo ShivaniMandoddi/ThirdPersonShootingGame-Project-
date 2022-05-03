@@ -202,10 +202,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.6929916
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: -0.10700834, y: 1, z: 0}
 --- !u!95 &448160430824078718
 Animator:
   serializedVersion: 3
@@ -262,7 +262,6 @@ MonoBehaviour:
   player: {fileID: 0}
   bloodEffect: {fileID: 0}
   enemyRagdoll: {fileID: 1944879163104735552, guid: dd544374c38f3d042b179e64181d4a81, type: 3}
-  healthText: {fileID: 0}
 --- !u!1 &1405475371783508419
 GameObject:
   m_ObjectHideFlags: 0
