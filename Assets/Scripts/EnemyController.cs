@@ -53,12 +53,11 @@ public class EnemyController : MonoBehaviour
         
 
     }
+
     public void playerHealth()
     {
         player.GetComponent<PlayerMovement>().PlayerHealth(1);
-        //players.health = Mathf.Clamp(players.health - 1, 0, players.maxhealth);
-        //player.GetComponent<PlayerMovement>().PlayerHealth(players.health);
-        //Debug.Log("Player health: " + players.health);
+       
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -217,7 +216,7 @@ public class Chase : State
     public Chase(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
         stateName = STATE.CHASE;
-        agent.stoppingDistance = 4f;
+        agent.stoppingDistance = 3f;
 
     }
     public override void Enter()
@@ -268,7 +267,7 @@ public class Attack : State
     public override void Update()
     {
 
-        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance+0.3f)  // If enemy is far than stopping distance, again to idle state 
+        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance)  // If enemy is far than stopping distance, again to idle state 
         {
             nextState = new Idle(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;

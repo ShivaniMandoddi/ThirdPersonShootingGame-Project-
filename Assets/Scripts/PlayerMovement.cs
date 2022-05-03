@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MyObjectPool;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,7 +19,9 @@ public class PlayerMovement : MonoBehaviour
     public Text healthText;
     public Text ammoText;
     public int health;
-    
+    public Slider healthSlider;
+    public GameObject gameEnd;
+    public bool isGameOver = false;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -32,36 +35,48 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthText.text = "Health: " + player.health;
-        ammoText.text = "Ammo: " + player.ammo;
-        Vector3 movement =new Vector3(Input.GetAxis("Horizontal"),0f, Input.GetAxis("Vertical")); // Taking inputs
-       
-        transform.Translate(movement.x*Time.deltaTime* playerSpeed, 0f, movement.z*Time.deltaTime * playerSpeed); // PLayer moving
-        if (movement.x != 0 || movement.z != 0)
-            animator.SetFloat("Blend", movement.magnitude);          // animation based on movement
-        else
-            animator.SetFloat("Blend", 0f);
-        float rotateX = Input.GetAxis("Mouse X") * rotationSpeed;   // player rotation left and right
-        transform.Rotate(0f, rotateX, 0f); 
-        if(Input.GetKeyDown(KeyCode.Space))     // PLayer Attacking
+        if (isGameOver == false)
         {
-            player.ammo--;
-            animator.SetTrigger("IsAttack");
-            //GameObject temp=Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
-            GameObject temp = SpawnManager.instance.GetFromPool("Bullet");
-            if (temp != null)
-            {
-                temp.SetActive(true);
-                temp.transform.position = bulletPosition.position;
-                temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1500f);
-            }
+            healthSlider.value = (float)player.health / player.maxhealth;
+            healthText.text = "Health: " + player.health;
+            ammoText.text = "Ammo: " + player.ammo;
 
+            Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); // Taking inputs
+
+            transform.Translate(movement.x * Time.deltaTime * playerSpeed, 0f, movement.z * Time.deltaTime * playerSpeed); // PLayer moving
+            if (movement.x != 0 || movement.z != 0)
+                animator.SetFloat("Blend", movement.magnitude);          // animation based on movement
+            else
+                animator.SetFloat("Blend", 0f);
+
+            float rotateX = Input.GetAxis("Mouse X") * rotationSpeed;   // player rotation left and right
+            transform.Rotate(0f, rotateX, 0f);
+
+            if (Input.GetKeyDown(KeyCode.Space))     // PLayer Attacking
+            {
+                player.ammo--;
+                animator.SetTrigger("IsAttack");
+                //GameObject temp=Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
+                GameObject temp = SpawnManager.instance.GetFromPool("Bullet");     // Spawing bullet from object pool
+                if (temp != null)
+                {
+                    temp.SetActive(true);
+                    temp.transform.position = bulletPosition.position;
+                    temp.GetComponent<Rigidbody>().AddForce(transform.forward * 1500f);
+                }
+
+            }
         }
-       
+        if(player.health==0)
+        {
+            isGameOver = true;
+            animator.SetTrigger("IsDead");
+            gameEnd.SetActive(true);
+        }
         
 
     }
-    public void PlayerHealth(int value)
+    public void PlayerHealth(int value)         // player health decreases , when enemy attacks
     {
 
         player.health = Mathf.Clamp(player.health-value,0,player.maxhealth);
@@ -78,19 +93,27 @@ public class PlayerMovement : MonoBehaviour
         audioSource.clip = walkClip;
         audioSource.Play();
     }
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void Quit()
+    {
+        SceneManager.LoadScene(0);
+    }
     public void PlayerDead()
     {
 
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag=="Medical")
+        if(other.gameObject.tag=="Medical")           // WHen medical kit collected, health increases
         {
             player.health = Mathf.Clamp(player.health + 20, 0, player.maxhealth);
             health = player.health;
             Destroy(other.gameObject);
         }
-        if (other.gameObject.tag == "Ammo")
+        if (other.gameObject.tag == "Ammo") // When ammo collected, bullets get increased
         {
             player.ammo = Mathf.Clamp(player.ammo + 20, 0, player.maxAmmo);
            
