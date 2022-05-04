@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using MyObjectPool;
 using UnityEngine.SceneManagement;
 
+
 public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -23,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject gameEnd;
     public bool isGameOver = false;
     public int score;
+    public GameObject bulleteffect;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && player.ammo>=0)     // PLayer Attacking
             {
                 player.ammo--;
+                Instantiate(bulleteffect, bulletPosition.position,Quaternion.identity);
                 animator.SetTrigger("IsAttack");
                 //GameObject temp=Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
                 GameObject temp = SpawnManager.instance.GetFromPool("Bullet");     // Spawing bullet from object pool
