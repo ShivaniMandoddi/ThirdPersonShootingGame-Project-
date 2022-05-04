@@ -572,8 +572,8 @@ RectTransform:
   m_Father: {fileID: 193583508}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.7636875, y: 0.86551857}
-  m_AnchorMax: {x: 0.97287506, y: 1}
+  m_AnchorMin: {x: 0.7636875, y: 0.8377778}
+  m_AnchorMax: {x: 0.9785209, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -590,7 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -610,7 +610,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ammo : 0'
+  m_Text: 'Ammo : 0
+
+    Score: 0'
 --- !u!222 &204836977
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3052,7 +3054,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235208997}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 109.1, y: 3.1, z: -127.02}
+  m_LocalPosition: {x: 110.84, y: 3.1, z: -127.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971293189}
@@ -4651,7 +4653,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618827516}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.8, y: 0, z: 30}
+  m_LocalPosition: {x: -30.8, y: 0, z: 30.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971293189}
@@ -4695,7 +4697,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620305164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 115.69, y: 8.45, z: 62.05}
+  m_LocalPosition: {x: 118.77, y: 8.45, z: 62.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971293189}
@@ -4815,7 +4817,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1676032469}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.65, y: 0, z: -59.3}
+  m_LocalPosition: {x: -6.2, y: 0, z: -59.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971293189}
@@ -4911,6 +4913,7 @@ MonoBehaviour:
   healthSlider: {fileID: 0}
   gameEnd: {fileID: 0}
   isGameOver: 0
+  score: 0
 --- !u!1 &1773895289
 GameObject:
   m_ObjectHideFlags: 0
@@ -5114,7 +5117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca59ac4c2999a349b9bb68f8356746c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 5
+  playerSpeed: 3
   rotationSpeed: 10
   shootClip: {fileID: 8300000, guid: a8586318017b01c4aa8345adfea5c0d7, type: 3}
   walkClip: {fileID: 8300000, guid: 5541cd8be5f32df498102771f8e84db8, type: 3}
@@ -5125,6 +5128,7 @@ MonoBehaviour:
   healthSlider: {fileID: 859866321}
   gameEnd: {fileID: 303205837}
   isGameOver: 0
+  score: 0
 --- !u!54 &2131634320
 Rigidbody:
   m_ObjectHideFlags: 0

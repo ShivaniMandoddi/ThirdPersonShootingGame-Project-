@@ -312,6 +312,8 @@ public class Dead : State// Dead State
     public override void Exit()
     {
         animator.SetBool("IsDead", false);
+        playerPosition.GetComponent<PlayerMovement>().score += 1;
+       
         nPC.SetActive(false);
         base.Exit();
     }
@@ -338,7 +340,9 @@ public class Dead1 : State// Dead State
     }
     public override void Exit()
     {
+        playerPosition.GetComponent<PlayerMovement>().score += 1;
         nPC.SetActive(false);
+       
         base.Exit();
     }
 

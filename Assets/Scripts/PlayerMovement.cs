@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public Slider healthSlider;
     public GameObject gameEnd;
     public bool isGameOver = false;
+    public int score;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -39,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         {
             healthSlider.value = (float)player.health / player.maxhealth;
             healthText.text = "Health: " + player.health;
-            ammoText.text = "Ammo: " + player.ammo;
+            ammoText.text = "Ammo: " + player.ammo +"\nScore: "+score;
 
             Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); // Taking inputs
 
@@ -52,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
             float rotateX = Input.GetAxis("Mouse X") * rotationSpeed;   // player rotation left and right
             transform.Rotate(0f, rotateX, 0f);
 
-            if (Input.GetKeyDown(KeyCode.Space))     // PLayer Attacking
+            if (Input.GetKeyDown(KeyCode.Space) && player.ammo>=0)     // PLayer Attacking
             {
                 player.ammo--;
                 animator.SetTrigger("IsAttack");
@@ -71,6 +72,16 @@ public class PlayerMovement : MonoBehaviour
         {
             isGameOver = true;
             animator.SetTrigger("IsDead");
+            gameEnd.SetActive(true);
+        }
+        if(isGameOver)
+        {
+            SpawnManager.instance.SetAllFalse();
+        }
+        if(score==10)
+        {
+            isGameOver = true;
+            animator.SetBool("Dance", true);
             gameEnd.SetActive(true);
         }
         

@@ -48,4 +48,11 @@ public class SpawnManager : MonoBehaviour
         }
         return null;
     }
+    public void SetAllFalse()
+    {
+        foreach (GameObject item in pool)
+        {
+            item.SetActive(false);
+        }
+    }
 }

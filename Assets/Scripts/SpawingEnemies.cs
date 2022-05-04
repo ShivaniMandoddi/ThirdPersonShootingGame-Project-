@@ -23,7 +23,7 @@ public class SpawingEnemies : MonoBehaviour
     {
         for (int i = 0; i < enemyCount; i++) // Spawing enemies
         {
-            Vector3 randomPoint = spawingPosition.position + Random.insideUnitSphere * radius; // Taking random postion in certain radius
+            Vector3 randomPoint= gameObject.transform.position + Random.insideUnitSphere * radius; // Taking random postion in certain radius
             NavMeshHit hit;
             if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas)) // Checking whether the point is on the terrain or not
             {
