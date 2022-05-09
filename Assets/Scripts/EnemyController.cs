@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     }
     void Start()
     {
+
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         //players.health = players.maxhealth;
@@ -53,9 +54,10 @@ public class EnemyController : MonoBehaviour
         
 
     }
-
+   
     public void playerHealth()
     {
+       
         player.GetComponent<PlayerMovement>().PlayerHealth(1);
        
     }
@@ -142,6 +144,27 @@ public class State
             return true;
         return false;
     }
+    public bool CheckAngle()
+    {
+        Vector3 direction = playerPosition.position - nPC.transform.position;
+        
+        if (Vector3.Angle(direction, nPC.transform.position) < 30f)
+        {
+            
+            return true;
+        }
+
+        return false;
+    }
+    public bool EnemyCanAttackPlayer()
+    {
+        Vector3 direction = playerPosition.position - nPC.transform.position;
+        if (direction.magnitude <= 3f)
+        {
+            return true;
+        }
+        return false;
+    }
 }
 public class Idle : State               //Idle State
 {
@@ -158,12 +181,12 @@ public class Idle : State               //Idle State
     }
     public override void Update()
     {
-        if (CanSeePlayer())                   //If enemy can see player, enemy goes to chase state
+        if (CanSeePlayer() && CheckAngle())                   //If enemy can see player, enemy goes to chase state
         {
             nextState = new Chase(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
         }
-        else                        // Otherwise, goes to Wonder State
+        else                    // Otherwise, goes to Wonder State
         {
             nextState = new Wonder(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -211,7 +234,7 @@ public class Wonder : State
         base.Exit();
     }
 }
-public class Chase : State
+public class Chase : State    // Chase State
 {
     public Chase(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
@@ -235,7 +258,7 @@ public class Chase : State
             nextState = new Wonder(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
         }
-        if (Vector3.Distance(nPC.transform.position, playerPosition.position) <= agent.stoppingDistance)
+        if (Vector3.Distance(nPC.transform.position, playerPosition.position) <= agent.stoppingDistance && EnemyCanAttackPlayer())
         {
             nextState = new Attack(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
@@ -253,21 +276,22 @@ public class Chase : State
 }
 public class Attack : State
 {
+    float angle;
     public Attack(GameObject _npc, NavMeshAgent _agent, Animator _animator, Transform _playerPosition) : base(_npc, _agent, _animator, _playerPosition)
     {
         stateName = STATE.ATTACK;
-        nPC.transform.LookAt(playerPosition.position);
+       
     }
     public override void Enter()
     {
         animator.SetBool("IsAttacking",true);
         base.Enter();
-
     }
     public override void Update()
     {
-
-        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance)  // If enemy is far than stopping distance, again to idle state 
+        nPC.transform.LookAt(playerPosition.position);
+       
+        if (Vector3.Distance(nPC.transform.position, playerPosition.position) > agent.stoppingDistance || !EnemyCanAttackPlayer())  // If enemy is far than stopping distance, again to idle state 
         {
             nextState = new Idle(nPC, agent, animator, playerPosition);
             eventStage = EVENTS.EXIT;
